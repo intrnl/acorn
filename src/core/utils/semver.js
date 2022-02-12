@@ -1,3 +1,8 @@
+// todo: barebones semver library for range checking.
+// should this be necessary? npm's semver library is pretty heavy.
+// this is probably only ever used for plugin dependency checks, it won't be
+// used for checking the actual plugin version.
+
 import { assert } from './index.js';
 
 
