@@ -1,0 +1,42 @@
+{
+	"$schema": "https://json.schemastore.org/webextension.json",
+	"name": "Acorn",
+	"version": "0.1.0",
+	"description": "Discord client mod",
+	"author": "intrnl",
+	"manifest_version": 2,
+	"background": {
+		"scripts": [
+			"./background.js"
+		]
+	},
+	"content_scripts": [
+		{
+			"js": ["./content.js"],
+			"matches": [
+				"*://*.discord.com/app",
+				"*://*.discord.com/login",
+				"*://*.discord.com/register",
+				"*://*.discord.com/channels/*",
+				"*://*.discord.com/users/*",
+				"*://*.discord.com/invite/*"
+			]
+		}
+	],
+	"permissions": [
+		"storage",
+		"webRequest",
+		"webRequestBlocking",
+		"*://*.discord.com/app",
+		"*://*.discord.com/login",
+		"*://*.discord.com/register",
+		"*://*.discord.com/channels/*",
+		"*://*.discord.com/users/*",
+		"*://*.discord.com/invite/*"
+	],
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "foo@bar"
+		}
+	}
+}
