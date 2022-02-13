@@ -97,7 +97,7 @@ export function patch (obj, prop, middleware, instead) {
 		}
 
 		// revert monkeypatch if no wares are left.
-		if (runner[_wares].length <= 0) {
+		if (runner[_wares].length < 1) {
 			obj[prop] = runner[_original];
 		}
 	};
