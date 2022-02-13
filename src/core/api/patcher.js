@@ -1,11 +1,6 @@
 // monkeypatch system works like middlewares, patches can call next() to pass
 // control to the next patch, before eventually reaching the original function.
 
-// todo: this is very radically different than other monkeypatching systems,
-// one missing thing from this system is that there's currently no way to
-// override the original method while still keeping other middlewares in place.
-// are they necessary? how would they fit into our current system?
-
 /**
  * @typedef {(args: any[]) => any} NextMiddleware
  */
@@ -20,6 +15,7 @@ import { assert } from '../utils/index.js';
 const _patched = '_patched';
 const _wares = '_wares';
 const _original = '_original';
+const _offset = '_offset';
 
 const noop = () => {};
 
@@ -28,8 +24,10 @@ const noop = () => {};
  * @param {object} obj Object to patch
  * @param {string} prop Property key to patch
  * @param {Middleware} middleware Middleware to run
+ * @param {boolean} [instead] Add middleware to the back where it'll be run last,
+ * this should be used to replace the original method.
  */
-export function patch (obj, prop, middleware) {
+export function patch (obj, prop, middleware, instead) {
 	assert(typeof middleware === 'function');
 
 	// todo: might have to revisit this down the line, but we're just going to
@@ -65,12 +63,22 @@ export function patch (obj, prop, middleware) {
 		runner[_patched] = true;
 		runner[_wares] = [];
 		runner[_original] = original;
+		runner[_offset] = 0;
 
 		obj[prop] = runner;
 	}
 
 	let running = true;
-	obj[prop][_wares].push(middleware);
+
+	if (instead) {
+		// adding middleware to the back will affect currently running monkeypatch
+		obj[prop][_wares] = obj[prop][_wares].slice();
+		obj[prop][_wares].splice(obj[prop][_offset]++, 0, middleware);
+	}
+	else {
+		obj[prop][_wares].push(middleware);
+	}
+
 
 	return () => {
 		if (!running) {
@@ -82,6 +90,10 @@ export function patch (obj, prop, middleware) {
 		// we avoid mutating the array in the case that the monkeypatch is still
 		// running.
 		obj[prop][_wares] = filterUniq(obj[prop][_wares], middleware);
+
+		if (instead) {
+			obj[prop][_offset]--;
+		}
 
 		// revert monkeypatch if there's only one ware left, it should still be the
 		// original function, i hope.
