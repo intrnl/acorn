@@ -7,6 +7,7 @@ const sections = [
 ];
 
 export function patchSettings () {
+	// @jsx h
 	const React = api.libraries.React;
 	const h = React.createElement;
 
@@ -44,11 +45,11 @@ export function patchSettings () {
 
 	function ModDebugInfo () {
 		return (
-			h('div', { className: `${classes.info} ${classes.versionHash}` },
-				h(Text, { size: Text.Sizes.SIZE_12, color: Text.Colors.MUTED },
-					'Acorn',
-				),
-			)
+			<div className={`${classes.info} ${classes.versionHash}`}>
+				<Text size={Text.Sizes.SIZE_12} color={Text.Colors.MUTED}>
+					Acorn
+				</Text>
+			</div>
 		);
 	}
 }
