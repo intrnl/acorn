@@ -46,11 +46,13 @@ export function patch (obj, prop, middleware, instead) {
 
 			// -1 is the original function
 			const loop = (args) => {
-				const fn = wares[idx -= 1];
+				idx -= 1;
 
 				if (idx < 0) {
 					return original.apply(this, args);
 				}
+
+				const fn = wares[idx];
 
 				return fn(this, args, loop);
 			};
