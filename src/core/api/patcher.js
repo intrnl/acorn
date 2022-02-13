@@ -65,6 +65,8 @@ export function patch (obj, prop, middleware, instead) {
 		runner[_original] = original;
 		runner[_offset] = 0;
 
+		runner.toString = () => original.toString();
+
 		obj[prop] = runner;
 	}
 
