@@ -1,3 +1,4 @@
+const listeners = new Set();
 let _require;
 
 /**
@@ -13,10 +14,41 @@ export function getRequire () {
 	const id = 'wpc';
 	const chunkName = 'webpackChunkdiscord_app';
 
-	globalThis[chunkName].push([[id], {}, (_r) => (_require = _r)]);
+	const wpc = globalThis[chunkName];
+	wpc.push([[id], {}, (_r) => (_require = _r)]);
 
 	delete _require.m[id];
 	delete _require.c[id];
+
+	// monkeypatch push function to add listeners.
+	const _push = wpc.push;
+	wpc.push = function (chunk) {
+		const modules = chunk[1];
+
+		for (const id in modules) {
+			const definition = modules[id];
+
+			const runner = (_module, _exports, _require) => {
+				definition.call(undefined, _module, _exports, _require);
+
+				// we've served our purpose here.
+				modules[id] = definition;
+
+				if (isPrimitive(_exports)) {
+					return;
+				}
+
+				for (const listener of listeners) {
+					listener(_exports);
+				}
+			};
+
+			runner.toString = () => definition.toString();
+			modules[id] = runner;
+		}
+
+		return _push.call(this, chunk);
+	};
 
 	return _require;
 }
@@ -24,6 +56,15 @@ export function getRequire () {
 /**
  * @typedef {(exports: any) => boolean} ModuleFilter
  */
+
+/**
+ * Adds a listener for new module additions
+ * @param {ModuleFilter} listener
+ */
+export function addListener (listener) {
+	listeners.add(listener);
+	return () => listeners.delete(listener);
+}
 
 /**
  * Returns a module that matches a given predicate.
