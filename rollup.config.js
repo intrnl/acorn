@@ -62,7 +62,7 @@ export default defineConfig({
 
 				const result = await esbuild.transform(code, {
 					target: 'esnext',
-					jsx: 'transform',
+					loader: 'jsx',
 					sourcemap: true,
 				});
 
