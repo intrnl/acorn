@@ -68,15 +68,16 @@ export function patch (obj, prop, middleware, instead) {
 		obj[prop] = runner;
 	}
 
+	const runner = obj[prop];
 	let running = true;
 
 	if (instead) {
 		// adding middleware to the back will affect currently running monkeypatch
-		obj[prop][_wares] = obj[prop][_wares].slice();
-		obj[prop][_wares].splice(obj[prop][_offset]++, 0, middleware);
+		runner[_wares] = runner[_wares].slice();
+		runner[_wares].splice(runner[_offset]++, 0, middleware);
 	}
 	else {
-		obj[prop][_wares].push(middleware);
+		runner[_wares].push(middleware);
 	}
 
 
@@ -89,15 +90,15 @@ export function patch (obj, prop, middleware, instead) {
 
 		// we avoid mutating the array in the case that the monkeypatch is still
 		// running.
-		obj[prop][_wares] = filterUniq(obj[prop][_wares], middleware);
+		runner[_wares] = filterUniq(runner[_wares], middleware);
 
 		if (instead) {
-			obj[prop][_offset]--;
+			runner[_offset]--;
 		}
 
 		// revert monkeypatch if no wares are left.
-		if (obj[prop][_wares].length <= 0) {
-			obj[prop] = obj[prop][_original];
+		if (runner[_wares].length <= 0) {
+			obj[prop] = runner[_original];
 		}
 	};
 }
