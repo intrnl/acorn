@@ -95,9 +95,8 @@ export function patch (obj, prop, middleware, instead) {
 			obj[prop][_offset]--;
 		}
 
-		// revert monkeypatch if there's only one ware left, it should still be the
-		// original function, i hope.
-		if (obj[prop][_wares].length <= 1) {
+		// revert monkeypatch if no wares are left.
+		if (obj[prop][_wares].length <= 0) {
 			obj[prop] = obj[prop][_original];
 		}
 	};
