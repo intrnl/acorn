@@ -46,10 +46,11 @@ export function patch (obj, prop, middleware) {
 
 			let idx = wares.length;
 
+			// -1 is the original function
 			const loop = (args) => {
 				const fn = wares[idx -= 1];
 
-				if (fn === original) {
+				if (idx < 0) {
 					return original.apply(this, args);
 				}
 
@@ -62,7 +63,7 @@ export function patch (obj, prop, middleware) {
 		const original = obj[prop];
 
 		runner[_patched] = true;
-		runner[_wares] = [original];
+		runner[_wares] = [];
 		runner[_original] = original;
 
 		obj[prop] = runner;
