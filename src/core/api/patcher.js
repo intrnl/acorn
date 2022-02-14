@@ -107,11 +107,11 @@ export function patch (obj, prop, middleware, instead) {
 	};
 }
 
-// comparing to Array#filter equivalent:
+// comparing to Array#filter equivalent: (Firefox Nightly 99 2022-02-14)
 // https://esbench.com/bench/620689336c89f600a5701610
-// 32% faster on 50 items
-// 157% faster on 500 items
-// 180% faster on 5000 items
+// 247% faster on 50 items    (1,663,884 vs. 5,783,073)
+// 165% faster on 500 items   (  109,167 vs. 289,485  )
+// 200% faster on 5000 items  (   11,623 vs. 34,950   )
 function filterUniq (array, value) {
 	const idx = array.indexOf(value);
 	array = array.slice();
