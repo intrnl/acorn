@@ -90,6 +90,27 @@ export function findModule (predicate) {
 	}
 }
 
+export function findModuleAsync (predicate) {
+	const mod = findModule(predicate);
+
+	if (mod) {
+		return Promise.resolve(mod);
+	}
+
+	return new Promise((resolve) => {
+		const unlisten = addListener((_exports) => {
+			if (predicate(_exports)) {
+				unlisten();
+				resolve(_exports);
+			}
+			else if (!isPrimitive(_exports.default) && predicate(_exports.default)) {
+				unlisten();
+				resolve(_exports.default);
+			}
+		});
+	});
+}
+
 /**
  * Returns an array of modules that match a given predicate.
  * @param {ModuleFilter} predicate
