@@ -6,15 +6,17 @@ const sections = [
 	{ section: 'HEADER', label: 'Acorn' },
 ];
 
-export function patchSettings () {
+export async function patchSettings () {
 	// @jsx h
 	const React = api.libraries.React;
 	const h = React.createElement;
 
-	const SettingsView = api.components.SettingsView;
+	const SettingsView = await api.webpack.findModuleAsync(api.webpack.byDisplayName('SettingsView'));
 	const Text = api.components.Text;
 
 	const classes = api.webpack.findModule(api.webpack.byProperties(['versionHash', 'info']));
+
+	console.debug('[acorn]', 'patching into settings');
 
 	// contains arrays we've already mutated, or found not to be the User Settings view.
 	const tainted = new WeakSet();
