@@ -21,6 +21,7 @@ async function inject (CORE_URL, STREAMS_POLYFILL_URL) {
 
 	const script = document.createElement('script');
 	script.src = CORE_URL;
+	script.type = 'module';
 	document.body.appendChild(script);
 }
 
