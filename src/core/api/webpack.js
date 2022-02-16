@@ -34,7 +34,7 @@ export function getRequire () {
 				// we've served our purpose here.
 				modules[id] = definition;
 
-				if (!listeners.size || isPrimitive(_exports)) {
+				if (!listeners.size) {
 					return;
 				}
 
@@ -99,6 +99,10 @@ export function findModuleAsync (predicate) {
 
 	return new Promise((resolve) => {
 		const unlisten = addListener((_exports) => {
+			if (isPrimitive(_exports)) {
+				return;
+			}
+
 			if (predicate(_exports)) {
 				unlisten();
 				resolve(_exports);
