@@ -27,6 +27,7 @@
  */
 
 import * as api from '../api/index.js';
+import { createDeferred } from '../utils/index.js';
 
 
 export const plugins = Object.create(null);
@@ -60,20 +61,16 @@ function createModuleWrapper (source, url) {
 	return (0, eval)(code);
 }
 
-function resolveDependencyOrder (plugins) {
-	const resolved = [];
+function validateGraph (graph) {
 	const cyclic = [];
+	const resolved = [];
 
-	function resolve (name, resolved, seen) {
-		if (resolved.includes(name)) {
-			return;
-		}
+	function resolve (node, seen) {
+		seen.push(node);
 
-		seen.push(name);
+		const dependencies = graph.get(node);
 
-		const node = plugins[name];
-
-		for (const edge of node.depends) {
+		for (const edge of dependencies) {
 			if (resolved.includes(edge)) {
 				continue;
 			}
@@ -89,17 +86,50 @@ function resolveDependencyOrder (plugins) {
 				continue;
 			}
 
-			resolve(edge, resolved, seen);
+			resolve(edge, seen.slice());
 		}
 
-		resolved.push(name);
+		resolved.push(node);
 	}
 
-	for (const name in plugins) {
-		resolve(name, resolved, []);
+	for (const node of graph.keys()) {
+		if (resolved.includes(node)) {
+			continue;
+		}
+
+		resolve(node, []);
 	}
 
-	return { resolved, cyclic };
+	if (cyclic.length) {
+		throw {
+			name: 'CyclicError',
+			message: 'Circular dependencies detected',
+			cyclic,
+		};
+	}
+}
+
+function runGraph (vertices) {
+	const graph = new Map(vertices);
+	validateGraph(vertices);
+
+	const resolvers = new Map();
+	const promises = [];
+
+	for (const fn of graph.keys()) {
+		const deferred = createDeferred();
+
+		resolvers.set(fn, deferred);
+		promises.push(deferred.promise);
+	}
+
+	for (const [fn, dependencies] of graph.entries()) {
+		Promise.all(dependencies.map((dep) => resolvers.get(dep).promise))
+			.then(() => resolvers.get(fn).resolve(fn()))
+			.catch(resolvers.get(fn).reject);
+	}
+
+	return Promise.allSettled(promises);
 }
 
 export {};
