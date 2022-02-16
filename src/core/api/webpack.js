@@ -24,8 +24,23 @@ export function getRequire () {
 	delete cache[id];
 
 	// add listeners to existing modules that haven't been loaded yet.
+	_patchListeners(modules, cache);
+
+	// monkeypatch push function to add listeners.
+	const _push = wpc.push;
+	wpc.push = function (chunk) {
+		const modules = chunk[1];
+		_patchListeners(modules, null);
+
+		return _push.call(this, chunk);
+	};
+
+	return _require;
+}
+
+function _patchListeners (modules, cache) {
 	for (const id in modules) {
-		if (id in cache) {
+		if (cache && id in cache) {
 			continue;
 		}
 
@@ -48,37 +63,6 @@ export function getRequire () {
 		runner.toString = () => definition.toString();
 		modules[id] = runner;
 	}
-
-	// monkeypatch push function to add listeners.
-	const _push = wpc.push;
-	wpc.push = function (chunk) {
-		const modules = chunk[1];
-
-		for (const id in modules) {
-			const definition = modules[id];
-
-			const runner = (_module, _exports, _require) => {
-				definition.call(undefined, _module, _exports, _require);
-
-				modules[id] = definition;
-
-				if (!listeners.size) {
-					return;
-				}
-
-				for (const listener of listeners) {
-					listener(_exports);
-				}
-			};
-
-			runner.toString = () => definition.toString();
-			modules[id] = runner;
-		}
-
-		return _push.call(this, chunk);
-	};
-
-	return _require;
 }
 
 /**
