@@ -34,7 +34,7 @@ export function getRequire () {
 				// we've served our purpose here.
 				modules[id] = definition;
 
-				if (isPrimitive(_exports)) {
+				if (!listeners.size || isPrimitive(_exports)) {
 					return;
 				}
 
