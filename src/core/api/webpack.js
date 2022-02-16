@@ -17,8 +17,37 @@ export function getRequire () {
 	const wpc = globalThis[chunkName];
 	wpc.push([[id], {}, (_r) => (_require = _r)]);
 
-	delete _require.m[id];
-	delete _require.c[id];
+	const modules = _require.m;
+	const cache = _require.c;
+
+	delete modules[id];
+	delete cache[id];
+
+	// add listeners to existing modules that haven't been loaded yet.
+	for (const id in modules) {
+		if (id in cache) {
+			continue;
+		}
+
+		const definition = modules[id];
+
+		const runner = (_module, _exports, _require) => {
+			definition.call(undefined, _module, _exports, _require);
+
+			modules[id] = definition;
+
+			if (!listeners.size) {
+				return;
+			}
+
+			for (const listener of listeners) {
+				listener(_exports);
+			}
+		};
+
+		runner.toString = () => definition.toString();
+		modules[id] = runner;
+	}
 
 	// monkeypatch push function to add listeners.
 	const _push = wpc.push;
@@ -31,7 +60,6 @@ export function getRequire () {
 			const runner = (_module, _exports, _require) => {
 				definition.call(undefined, _module, _exports, _require);
 
-				// we've served our purpose here.
 				modules[id] = definition;
 
 				if (!listeners.size) {
