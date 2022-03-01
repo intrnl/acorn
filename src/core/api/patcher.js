@@ -28,7 +28,7 @@ const noop = () => {};
  * this should be used to replace the original method.
  */
 export function patch (obj, prop, middleware, instead) {
-	assert(typeof middleware === 'function');
+	assert(typeof middleware === 'function', 'middleware must be a function');
 
 	// todo: might have to revisit this down the line, but we're just going to
 	// assume that if you're monkeypatching a method that doesn't exist, it means
@@ -37,7 +37,7 @@ export function patch (obj, prop, middleware, instead) {
 		obj[prop] = noop;
 	}
 	else {
-		assert(typeof obj[prop] === 'function');
+		assert(typeof obj[prop] === 'function', 'obj[prop] must be a function');
 	}
 
 	if (!obj[prop][_patched]) {
