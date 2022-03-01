@@ -33,8 +33,11 @@ export function patch (obj, prop, middleware, instead) {
 	// todo: might have to revisit this down the line, but we're just going to
 	// assume that if you're monkeypatching a method that doesn't exist, it means
 	// you're adding into it.
-	if (!obj[prop]) {
+	if (obj[prop] == null) {
 		obj[prop] = noop;
+	}
+	else {
+		assert(typeof obj[prop] === 'function');
 	}
 
 	if (!obj[prop][_patched]) {
