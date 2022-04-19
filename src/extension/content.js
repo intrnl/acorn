@@ -4,7 +4,10 @@ const STREAMS_POLYFILL_URL = 'https://unpkg.com/web-streams-polyfill/dist/polyfi
 
 const inject = async (CORE_URL, STREAMS_POLYFILL_URL) => {
 	// Firefox doesn't support TransformStream yet.
-	if (typeof TransformStream === 'undefined') {
+	if (
+		typeof TransformStream === 'undefined' ||
+		typeof TextDecoderStream === 'undefined'
+	) {
 		console.log('%c[acorn:prehook]', 'color: #7289da', `injecting streams polyfill`);
 
 		const script = document.createElement('script');
