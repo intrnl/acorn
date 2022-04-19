@@ -47,9 +47,9 @@ const _patchListeners = (modules, cache) => {
 		const definition = modules[id];
 
 		const runner = (_module, _exports, _require) => {
-			definition.call(undefined, _module, _exports, _require);
-
 			modules[id] = definition;
+
+			definition.call(undefined, _module, _exports, _require);
 
 			if (!listeners.size) {
 				return;
