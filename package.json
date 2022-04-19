@@ -9,9 +9,9 @@
 	},
 	"devDependencies": {
 		"@types/chrome": "^0.0.177",
-		"esbuild": "^0.14.21",
-		"eslint": "^8.7.0",
-		"rollup": "^2.67.2",
+		"esbuild": "^0.14.36",
+		"eslint": "^8.13.0",
+		"rollup": "^2.70.2",
 		"rollup-plugin-serve2": "^1.1.2"
 	}
 }
