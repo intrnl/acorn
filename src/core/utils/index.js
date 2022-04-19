@@ -1,10 +1,10 @@
-export function assert (condition, message) {
+export const assert = (condition, message) => {
 	if (!condition) {
 		throw new Error(message || 'Assertion failed');
 	}
-}
+};
 
-export function createDeferred () {
+export const createDeferred = () => {
 	const deferred = {};
 
 	deferred.promise = new Promise((resolve, reject) => (
@@ -12,4 +12,4 @@ export function createDeferred () {
 	));
 
 	return deferred;
-}
+};

@@ -3,8 +3,8 @@ import { patchSettings } from './settings/index.jsx';
 
 globalThis.acorn = api;
 
-async function initialize () {
+const initialize = async () => {
 	patchSettings();
-}
+};
 
 initialize();

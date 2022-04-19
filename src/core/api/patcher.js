@@ -27,7 +27,7 @@ const noop = () => {};
  * @param {boolean} [instead] Add middleware to the back where it'll be run last,
  * this should be used to replace the original method.
  */
-export function patch (obj, prop, middleware, instead) {
+export const patch = (obj, prop, middleware, instead) => {
 	assert(typeof middleware === 'function', 'middleware must be a function');
 
 	// todo: might have to revisit this down the line, but we're just going to
@@ -108,20 +108,20 @@ export function patch (obj, prop, middleware, instead) {
 			obj[prop] = runner[_original];
 		}
 	};
-}
+};
 
 // comparing to Array#filter equivalent: (Firefox Nightly 99 2022-02-14)
 // https://esbench.com/bench/620689336c89f600a5701610
 // 247% faster on 50 items    (1,663,884 vs. 5,783,073)
 // 165% faster on 500 items   (  109,167 vs. 289,485  )
 // 200% faster on 5000 items  (   11,623 vs. 34,950   )
-function filterUniq (array, value) {
+const filterUniq = (array, value) => {
 	const idx = array.indexOf(value);
 	array = array.slice();
 	array.splice(idx, 1);
 
 	return array;
-}
+};
 
 export class PatchContainer {
 	patches = [];

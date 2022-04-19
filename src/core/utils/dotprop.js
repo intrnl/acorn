@@ -1,4 +1,4 @@
-function getPathSegments (path) {
+const getPathSegments = (path) => {
 	const parts = path.split('.');
 	const segments = [];
 
@@ -14,9 +14,9 @@ function getPathSegments (path) {
 	}
 
 	return segments;
-}
+};
 
-export function getProperty (object, path, defaultValue) {
+export const getProperty = (object, path, defaultValue) => {
 	const segments = getPathSegments(path);
 
 	for (let idx = 0; idx < segments.length; idx++) {
@@ -30,9 +30,9 @@ export function getProperty (object, path, defaultValue) {
 	}
 
 	return object;
-}
+};
 
-export function setProperty (object, path, value) {
+export const setProperty = (object, path, value) => {
 	const segments = getPathSegments(path);
 
 	for (let idx = 0; idx < segments.length; idx++) {
@@ -48,9 +48,9 @@ export function setProperty (object, path, value) {
 
 		object = object[segment];
 	}
-}
+};
 
-export function hasProperty (object, path) {
+export const hasProperty = (object, path) => {
 	const segments = getPathSegments(path);
 
 	for (let idx = 0; idx < segments.length; idx++) {
@@ -68,4 +68,4 @@ export function hasProperty (object, path) {
 	}
 
 	return true;
-}
+};

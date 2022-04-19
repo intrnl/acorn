@@ -4,7 +4,7 @@
  * @param {ReadableStream<T>} stream
  * @returns {AsyncIterableIterator<T>}
  */
-export function createStreamIterator (stream) {
+export const createStreamIterator = (stream) => {
 	// return if browser already supports async iterator in stream
 	if (stream[Symbol.asyncIterator]) {
 		return stream;
@@ -24,4 +24,4 @@ export function createStreamIterator (stream) {
 			return {};
 		},
 	};
-}
+};

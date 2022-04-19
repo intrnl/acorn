@@ -10,7 +10,7 @@ const Suspense = Symbol.for('react.suspense');
  * @param {Node} node
  * @returns {any}
  */
-export function getReactInstance (node) {
+export const getReactInstance = (node) => {
 	let instance = node.__reactFiber$;
 
 	if (instance) {
@@ -34,14 +34,14 @@ export function getReactInstance (node) {
 			return node[key];
 		}
 	}
-}
+};
 
 
 /**
  * Retrieve the component used in the Fiber instance, this excludes React's
  * built-in components.
  */
-export function getComponent (instance) {
+export const getComponent = (instance) => {
 	const type = instance.type;
 
 	if (!type || typeof type === 'string' || type === Suspense) {
@@ -59,12 +59,12 @@ export function getComponent (instance) {
 	}
 
 	return type;
-}
+};
 
 /**
  * Retrieve the states of a class component-backed Fiber instance.
  */
-export function getClassComponentState (instance) {
+export const getClassComponentState = (instance) => {
 	const state = instance.stateNode;
 
 	if (state instanceof Node) {
@@ -72,23 +72,23 @@ export function getClassComponentState (instance) {
 	}
 
 	return state;
-}
+};
 
 /**
  * Retrieve the states of a functional component-backed Fiber instance, as they
  * are in a linked list, this will return the first state. Access the `next`
  * property to get the next state and so on.
  */
-export function getHookComponentState (instance) {
+export const getHookComponentState = (instance) => {
 	const state = instance.memoizedState;
 
 	return state;
-}
+};
 
 /**
  * Retrieve the ancestors of the Fiber instance
  */
-export function getAncestors (instance, depth = Infinity) {
+export const getAncestors = (instance, depth = Infinity) => {
 	const ancestors = [];
 	let curr = instance;
 
@@ -114,4 +114,4 @@ export function getAncestors (instance, depth = Infinity) {
 	}
 
 	return ancestors;
-}
+};

@@ -13,7 +13,7 @@ const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
  * Parse semantic version
  * @param {string} version
  */
-export function parseVersion (version) {
+export const parseVersion = (version) => {
 	version = version.trim();
 
 	const match = RE_SEMVER.exec(version);
@@ -37,13 +37,13 @@ export function parseVersion (version) {
 		prerelease,
 		buildmetadata,
 	};
-}
+};
 
 /**
  * Parse semantic version range
  * @param {string} range
  */
-export function parseRange (range) {
+export const parseRange = (range) => {
 	range = range.trim();
 
 	// first, split based on ||
@@ -52,8 +52,8 @@ export function parseRange (range) {
 	for (const part of parts) {
 
 	}
-}
+};
 
-export function satisfiesRange (version, range) {
+export const satisfiesRange = (version, range) => {
 
-}
+};

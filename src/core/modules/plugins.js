@@ -33,7 +33,7 @@ import { createDeferred } from '../utils/index.js';
 export const plugins = Object.create(null);
 const internals = Object.create(null);
 
-function _require (from, to) {
+const _require = (from, to) => {
 	if (from === to) {
 		return;
 	}
@@ -50,22 +50,22 @@ function _require (from, to) {
 	}
 
 	throw new Error(`unable to require ${to}`);
-}
+};
 
-function createModuleWrapper (source, url) {
+const createModuleWrapper = (source, url) => {
 	const code = (
 		`(function(exports,require){${source}})` +
 		`\n//# sourceURL=${url}`
 	);
 
 	return (0, eval)(code);
-}
+};
 
-function validateGraph (graph) {
+const validateGraph = (graph) => {
 	const cyclic = [];
 	const resolved = [];
 
-	function resolve (node, seen) {
+	const resolve = (node, seen) => {
 		seen.push(node);
 
 		const dependencies = graph.get(node);
@@ -90,7 +90,7 @@ function validateGraph (graph) {
 		}
 
 		resolved.push(node);
-	}
+	};
 
 	for (const node of graph.keys()) {
 		if (resolved.includes(node)) {
@@ -107,9 +107,9 @@ function validateGraph (graph) {
 			cyclic,
 		};
 	}
-}
+};
 
-function runGraph (vertices) {
+const runGraph = (vertices) => {
 	const graph = new Map(vertices);
 	validateGraph(vertices);
 
@@ -130,6 +130,6 @@ function runGraph (vertices) {
 	}
 
 	return Promise.allSettled(promises);
-}
+};
 
 export {};

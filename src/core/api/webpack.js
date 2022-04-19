@@ -5,7 +5,7 @@ let _require;
  * Get Webpack require function
  * @returns {Function}
  */
-export function getRequire () {
+export const getRequire = () => {
 	if (_require) {
 		return _require;
 	}
@@ -36,9 +36,9 @@ export function getRequire () {
 	};
 
 	return _require;
-}
+};
 
-function _patchListeners (modules, cache) {
+const _patchListeners = (modules, cache) => {
 	for (const id in modules) {
 		if (cache && id in cache) {
 			continue;
@@ -63,7 +63,7 @@ function _patchListeners (modules, cache) {
 		runner.toString = () => definition.toString();
 		modules[id] = runner;
 	}
-}
+};
 
 /**
  * @typedef {(exports: any) => boolean} ModuleFilter
@@ -73,17 +73,17 @@ function _patchListeners (modules, cache) {
  * Adds a listener for new module additions
  * @param {ModuleFilter} listener
  */
-export function addListener (listener) {
+export const addListener = (listener) => {
 	listeners.add(listener);
 	return () => listeners.delete(listener);
-}
+};
 
 /**
  * Returns a module that matches a given predicate.
  * @param {ModuleFilter} predicate
  * @returns {any}
  */
-export function findModule (predicate) {
+export const findModule = (predicate) => {
 	const cache = getRequire().c;
 
 	for (const index in cache) {
@@ -100,9 +100,9 @@ export function findModule (predicate) {
 			return _exports.default;
 		}
 	}
-}
+};
 
-export function findModuleAsync (predicate) {
+export const findModuleAsync = (predicate) => {
 	const mod = findModule(predicate);
 
 	if (mod) {
@@ -125,14 +125,14 @@ export function findModuleAsync (predicate) {
 			}
 		});
 	});
-}
+};
 
 /**
  * Returns an array of modules that match a given predicate.
  * @param {ModuleFilter} predicate
  * @returns {any[]}
  */
-export function filterModules (predicate) {
+export const filterModules = (predicate) => {
 	const cache = getRequire().c;
 	const result = [];
 
@@ -152,25 +152,25 @@ export function filterModules (predicate) {
 	}
 
 	return result;
-}
+};
 
 /**
  * Creates a filter to find React components exported on default by its given name.
  * @param {string} name
  * @returns {ModuleFilter}
  */
-export function byDisplayName (name) {
+export const byDisplayName = (name) => {
 	return (_exports) => {
 		return _exports.displayName === name;
 	};
-}
+};
 
 /**
  * Creates a filter to find modules that contains given properties.
  * @param {string[]} props
  * @returns {ModuleFilter}
  */
-export function byProperties (props) {
+export const byProperties = (props) => {
 	return (_exports) => {
 		for (const prop of props) {
 			if (!(prop in _exports)) {
@@ -180,14 +180,14 @@ export function byProperties (props) {
 
 		return true;
 	};
-}
+};
 
 /**
  * Creates a filter to find modules that contains given prototype properties.
  * @param {string[]} protos
  * @returns {ModuleFilter}
  */
-export function byPrototypes (protos) {
+export const byPrototypes = (protos) => {
 	return (_exports) => {
 		const proto = _exports.prototype;
 
@@ -203,11 +203,11 @@ export function byPrototypes (protos) {
 
 		return true;
 	};
-}
+};
 
 /**
  * Check if value is primitive, we're not interested on them.
  */
-function isPrimitive (value) {
+const isPrimitive = (value) => {
 	return typeof value !== 'object' && typeof value !== 'function';
-}
+};

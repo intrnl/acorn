@@ -4,7 +4,7 @@ import { createStreamIterator } from '../utils/streams.js';
 const RE_META = /\B\/\*[*!]\s*(?:\n|\r|\r\n)([\S\s]*?)(?:\n|\r|\r\n)\s*\*\*\//;
 const RE_META_PART = /\* @([a-zA-Z]+)\s+(.+?)\s*$/gm;
 
-export function readMeta (source) {
+export const readMeta = (source) => {
 	// this is a very rudimentary JSDoc-like parser, beware!
 	const match = RE_META.exec(source);
 
@@ -33,18 +33,18 @@ export function readMeta (source) {
 	}
 
 	return meta;
-}
+};
 
-function matchEndMarker (char, pos) {
+const matchEndMarker = (char, pos) => {
 	// match `**/`
 	return (
 		(pos === 0 && char === '*') ||
 		(pos === 1 && char === '*') ||
 		(pos === 2 && char === '/')
 	);
-}
+};
 
-export async function fetchResourceIfMismatch (url, version) {
+export const fetchResourceIfMismatch = async (url, version) => {
 	// we attempt to fetch the first 1024 bytes of the resource to find the
 	// metadata containing the version, if the version mismatches or the metadata
 	// doesn't contain the version, then we continue to fetch.
@@ -97,9 +97,9 @@ export async function fetchResourceIfMismatch (url, version) {
 	}
 
 	return { source, meta };
-}
+};
 
-export async function fetchResource (url) {
+export const fetchResource = async (url) => {
 	const response = await fetch(url);
 
 	if (!response.ok) {
@@ -110,4 +110,4 @@ export async function fetchResource (url) {
 	const meta = readMeta(source);
 
 	return { source, meta };
-}
+};

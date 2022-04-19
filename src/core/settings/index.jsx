@@ -6,7 +6,7 @@ const sections = [
 	{ section: 'HEADER', label: 'Acorn' },
 ];
 
-export async function patchSettings () {
+export const patchSettings = async () => {
 	// @jsx h
 	const React = api.libraries.React;
 	const h = React.createElement;
@@ -17,6 +17,16 @@ export async function patchSettings () {
 	const classes = api.webpack.findModule(api.webpack.byProperties(['versionHash', 'info']));
 
 	console.debug('[acorn]', 'patching into settings');
+
+	const ModDebugInfo = () => {
+		return (
+			<div className={`${classes.info} ${classes.versionHash}`}>
+				<Text size={Text.Sizes.SIZE_12} color={Text.Colors.MUTED}>
+					Acorn
+				</Text>
+			</div>
+		);
+	};
 
 	// contains arrays we've already mutated, or found not to be the User Settings view.
 	const tainted = new WeakSet();
@@ -44,14 +54,4 @@ export async function patchSettings () {
 
 		return next(args);
 	});
-
-	function ModDebugInfo () {
-		return (
-			<div className={`${classes.info} ${classes.versionHash}`}>
-				<Text size={Text.Sizes.SIZE_12} color={Text.Colors.MUTED}>
-					Acorn
-				</Text>
-			</div>
-		);
-	}
-}
+};

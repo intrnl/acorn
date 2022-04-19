@@ -2,7 +2,7 @@
 const CORE_URL = 'http://localhost:1234/core.js';
 const STREAMS_POLYFILL_URL = 'https://unpkg.com/web-streams-polyfill/dist/polyfill.es2018.min.js';
 
-async function inject (CORE_URL, STREAMS_POLYFILL_URL) {
+const inject = async (CORE_URL, STREAMS_POLYFILL_URL) => {
 	// Firefox doesn't support TransformStream yet.
 	if (typeof TransformStream === 'undefined') {
 		console.log('%c[acorn:prehook]', 'color: #7289da', `injecting streams polyfill`);
@@ -23,7 +23,7 @@ async function inject (CORE_URL, STREAMS_POLYFILL_URL) {
 	script.src = CORE_URL;
 	script.type = 'module';
 	document.body.appendChild(script);
-}
+};
 
 const injection = `(${inject.toString()})('${CORE_URL}', '${STREAMS_POLYFILL_URL}')`;
 

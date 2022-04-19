@@ -5,6 +5,16 @@ let _Libraries_React;
 let _Libraries_ReactDOM;
 let _Libraries_ReactRouter;
 
+let _Modules_Flux;
+let _Modules_FluxDispatcher;
+
+let _Components_Flex;
+let _Components_Text;
+let _Components_Button;
+let _Components_DropdownButton;
+let _Components_Menu;
+let _Components_SettingsView;
+
 export const libraries = {
 	get React () {
 		return _Libraries_React ||= findModule(byProperties(['cloneElement', 'createElement']));
@@ -17,9 +27,6 @@ export const libraries = {
 	},
 };
 
-let _Modules_Flux;
-let _Modules_FluxDispatcher;
-
 export const modules = {
 	get Flux () {
 		return _Modules_Flux ||= findModule(byProperties(['Store', 'connectStores']));
@@ -28,13 +35,6 @@ export const modules = {
 		return _Modules_FluxDispatcher ||= findModule(byProperties(['_currentDispatchActionType', '_processingWaitQueue']));
 	},
 };
-
-let _Components_Flex;
-let _Components_Text;
-let _Components_Button;
-let _Components_DropdownButton;
-let _Components_Menu;
-let _Components_SettingsView;
 
 export const components = {
 	get Flex () {

@@ -29,6 +29,6 @@ class Configuration {
 	}
 }
 
-export function retrieve (scope) {
+export const retrieve = (scope) => {
 	return new Configuration(scope);
-}
+};
